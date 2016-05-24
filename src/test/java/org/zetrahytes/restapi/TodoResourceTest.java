@@ -5,7 +5,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.zetrahytes.restapi.Main;
+import org.zetrahytes.restapi.app.Main;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;

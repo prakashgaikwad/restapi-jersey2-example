@@ -1,4 +1,4 @@
-package org.zetrahytes.restapi;
+package org.zetrahytes.restapi.app;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
