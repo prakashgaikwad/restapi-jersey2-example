@@ -23,6 +23,7 @@ import org.zetrahytes.restapi.entity.Todo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -44,18 +45,30 @@ public class TodoResource {
     }
 
     @GET
-    @ApiOperation(value = "Returns all todos")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "returns a list of todos in json format") })
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Return all todos")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "returns a list of todos in json format") })
     public Response getAllTodos() {
         Collection<Todo> todoCollection = todos.values();
         return Response.ok(todoCollection).build();
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Add a new todo")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "todo added sucessfully") })
+    public Response addTodo(@ApiParam(value = "new todo", required = true) Todo todo) {
+        todos.put(todo.getId(), todo);
+        return Response.noContent().build(); // 204 - Todo added
+    }
+
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTodoById(@PathParam("id") long id) {
+    @ApiOperation(value = "Return a todo by id")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "a todo, if present, in json format"),
+            @ApiResponse(code = 404, message = "todo not found") })
+    public Response getTodoById(@ApiParam(value = "id of the todo", required = true) @PathParam("id") long id) {
         Todo todo = todos.get(id);
         if (isNull(todo)) {
             return Response.status(Status.NOT_FOUND).build();
@@ -63,23 +76,25 @@ public class TodoResource {
         return Response.ok(todo).build();
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response addTodo(Todo todo) {
-        todos.put(todo.getId(), todo);
-        return Response.noContent().build(); // 204 - Todo added
-    }
-
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateTodo(Todo todo) {
+    @ApiOperation(value = "Update an existing todo")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "todo updated sucessfully"),
+            @ApiResponse(code = 404, message = "todo not found") })
+    public Response updateTodo(@ApiParam(value = "new todo", required = true) Todo todo) {
+        if (isNull(todos.get(todo.getId()))) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
         todos.put(todo.getId(), todo);
-        return Response.noContent().build(); // 204 - Todo added
+        return Response.noContent().build(); // 204 - Todo updated
     }
 
     @DELETE
     @Path("{id}")
-    public Response remove(@PathParam("id") long id) {
+    @ApiOperation(value = "Return a todo by id")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "a todo, if present, is removed"),
+            @ApiResponse(code = 404, message = "todo not found") })
+    public Response removeTodo(@ApiParam(value = "id of the todo", required = true) @PathParam("id") long id) {
         Todo removedTodo = todos.remove(id);
         if (isNull(removedTodo)) {
             return Response.status(Status.NOT_FOUND).build();

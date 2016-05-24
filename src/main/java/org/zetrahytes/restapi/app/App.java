@@ -25,6 +25,7 @@ public class App extends Application {
         beanConfig.setBasePath("/myapp");
         beanConfig.setResourcePackage("org.zetrahytes.restapi");
         beanConfig.setScan(true);
+        beanConfig.setPrettyPrint(true);
     }
     
     @Override
