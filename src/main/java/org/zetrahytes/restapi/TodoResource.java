@@ -16,13 +16,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zetrahytes.restapi.entity.Todo;
 
 import static java.util.Objects.isNull;
 
 @Path("todos")
 public class TodoResource {
-
+    
+    private static final Logger LOG = LoggerFactory.getLogger(TodoResource.class);
 	private static Map<Long, Todo> todos;
 
 	static {
@@ -30,6 +33,7 @@ public class TodoResource {
 		Date today = new Date();
 		todos.put(1L, new Todo(1, "add a working jersey2 example", true, today));
 		todos.put(2L, new Todo(2, "add checkstyle", false, today));
+		LOG.info("Populated some todos");
 	}
 
 	@GET
