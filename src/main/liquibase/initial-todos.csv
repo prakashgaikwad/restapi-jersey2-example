@@ -1,0 +1,5 @@
+name,done
+create a basic restful api with jersey 2,TRUE
+add checkstyle,FALSE
+package project as servlet 3.x complaint war,TRUE
+integrate swagger to generate docs,TRUE

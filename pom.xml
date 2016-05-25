@@ -40,6 +40,11 @@
 			<version>1.5.0</version>
 		</dependency>
 		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>2.3.4</version>
+		</dependency>
+		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.1.7</version>
@@ -138,9 +143,64 @@
 					</webResources>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>build-database</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>update</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<changeLogFile>
+						${basedir}/src/main/liquibase/master.xml
+					</changeLogFile>
+					<driver>org.hsqldb.jdbcDriver</driver>
+					<url>jdbc:hsqldb:file:~/restapi-jersey2-example-hsqldb</url>
+					<username>sa</username>
+					<password />
+					<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+				</configuration>
+			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.liquibase</groupId>
+										<artifactId>
+											liquibase-maven-plugin
+										</artifactId>
+										<versionRange>
+											[3.5.1,)
+										</versionRange>
+										<goals>
+											<goal>update</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
-
 	<properties>
 		<jersey.version>2.23</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
