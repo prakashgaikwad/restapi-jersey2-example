@@ -3,8 +3,8 @@ package org.zetrahytes.restapi;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,6 +13,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -29,15 +31,22 @@ import io.swagger.annotations.ApiResponses;
 
 import static java.util.Objects.isNull;
 
+@Singleton
 @Path("todos")
 @Api(value = "/todos")
 public class TodoResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(TodoResource.class);
-    private static Map<Long, Todo> todos;
-
-    static {
-        todos = new ConcurrentHashMap<>(); // thread-safe
+    private Map<Long, Todo> todos;
+    
+    @Context
+    private Configuration config;
+    
+    
+    @SuppressWarnings("unchecked")
+    @PostConstruct
+    public void init() {
+        todos = (Map<Long, Todo>) config.getProperty("cache");
         Date today = new Date();
         todos.put(1L, new Todo(1, "add a working jersey2 example", true, today));
         todos.put(2L, new Todo(2, "add checkstyle", false, today));

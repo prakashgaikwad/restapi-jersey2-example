@@ -1,8 +1,9 @@
 package org.zetrahytes.restapi.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Todo {
+public class Todo implements Serializable {
 
 	private long id;
 	private String name;
